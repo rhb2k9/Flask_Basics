@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}
+Edit Product
+{% endblock %}
+{% block content %}
+<form id="myform" action="" method="post" style="background-color: aquamarine;" >
+    <table>
+        <tr>
+            <td style="width: 20%;"><strong>Mobile ID</strong></td>
+            <td>
+                <select name="prodid" id="prodid" onchange="getDetails()" >
+                    {% for pid in ids %}
+                        <option value="{{ pid }}">{{ pid }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Brand</strong></td>
+            <td><input type="text" name="brand" id="brand" size="20"></td>
+        </tr>
+        <tr>
+            <td><strong>Model</strong></td>
+            <td>
+                <input type="text" name="model" id="model" size="20">
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Storage</strong></td>
+            <td>
+                <input type="text" id="storage" name="storage" size="30">
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Processor</strong></td>
+            <td>
+                <input type="text" id="processor" name="processor" size="50">
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Rate</strong></td>
+            <td>
+                <input type="text" name="rop" id="rop" size="20">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="button" value="Update" class="btn btn-primary" onclick="UpdateProd()">
+
+                <input type="button" value="Delete" class="btn btn-danger" onclick="DelProd()">
+            </td>
+        </tr>
+    </table>
+</form>
+<script>
+    function getDetails(){
+        var k = $('#prodid').val()
+        //alert(k);
+        $.ajax({
+            url: '/fetchProd',
+            method:"POST",
+            data:{
+                mid: k
+            },
+            dataType:"JSON",
+            success: function(data){
+                console.log(data);
+                $('#brand').val(data.Brand);
+                $('#model').val(data.Model);
+                $('#storage').val(data.Storage);
+                $('#processor').val(data.Processor);
+            }
+        })
+    }
+
+
+    function UpdateProd(){
+        var k = $('#prodid').val()
+        alert(k); 
+        var y = $('#rop').val();
+        $.ajax({
+            url: '/urate',
+            method:"POST",
+            data:{
+                mid : k,
+                rate: y
+            },
+            dataType: "JSON",
+            success: function(data){
+                alert("Mobile Rate updated...");
+            }
+        })
+    }
+
+
+    function DelProd(){
+        var k = $('#prodid').val()
+        alert(k); 
+        $.ajax({
+            url :'/delmid',
+            method: "POST",
+            data:{
+                mid:k
+            },
+            dataType:"JSON",
+            success:function(data){
+                alert("Record with id="+k+" is successfuly removed")
+            }
+        })
+    }
+</script>
+
+{% endblock %}
